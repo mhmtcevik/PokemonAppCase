@@ -12,7 +12,9 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        StorageAPI().getData(path: "/cards?hp=gte99") { result in
+            print(try? result.get())
+        }
     }
     
 
