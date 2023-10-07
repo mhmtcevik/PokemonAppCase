@@ -1,13 +1,13 @@
 //
-//  DetailViewController.swift
+//  NavigationController.swift
 //  PokemonApp
 //
-//  Created by Mehmet Çevık on 5.10.2023.
+//  Created by Mehmet Çevık on 6.10.2023.
 //
 
 import UIKit
 
-class DetailViewController: ViewController {
+class NavigationController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
