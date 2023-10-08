@@ -50,6 +50,7 @@ class TabBarController: UITabBarController, Navigatable {
     
     func configureTabBar() {
         self.tabBar.backgroundColor = .white
+        self.tabBar.isTranslucent = false
     }
     
 

@@ -30,6 +30,7 @@ class BaseAPI<T: TargetType> {
             parameters: parameters.0,
             encoding: parameters.1,
             headers: headers).responseJSON { response in
+                print("request-url: \(String(describing: response.request?.url?.absoluteString))")
                 
                 guard let statusCode = response.response?.statusCode else {
                     completionhandler(.failure(NSError()))

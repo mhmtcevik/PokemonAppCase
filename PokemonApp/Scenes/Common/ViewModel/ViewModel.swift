@@ -7,6 +7,22 @@
 
 import Foundation
 
-class ViewModel {
+protocol ViewModelBehavior {
+    var imageService: ImageService { get }
+    var realmService: RealmService { get }
+    var fetchService: FetchService { get }
+}
+
+class ViewModel: ViewModelBehavior {
     
+    var imageService: ImageService
+    var realmService: RealmService
+    var fetchService: FetchService
+    
+    
+    init() {
+        imageService = ImageService()
+        realmService = RealmService()
+        fetchService = FetchService()
+    }
 }

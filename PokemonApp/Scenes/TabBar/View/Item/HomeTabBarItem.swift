@@ -17,11 +17,11 @@ extension TabBarItem {
     private func getNavigationController(with viewModel: ViewModel, navigator: Navigator) -> UIViewController {
         switch self {
         case .search:
-            let vc = SearchViewController()
+            let vc = SearchViewController(navigator: navigator, viewModel: viewModel)
             return NavigationController(rootViewController: vc)
             
         case .favorite:
-            let vc = FavoriteViewController()
+            let vc = FavoriteViewController(navigator: navigator, viewModel: viewModel)
             return NavigationController(rootViewController: vc)
         }
     }
