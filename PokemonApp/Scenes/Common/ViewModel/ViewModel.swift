@@ -19,10 +19,10 @@ class ViewModel: ViewModelBehavior {
     var realmService: RealmService
     var fetchService: FetchService
     
-    
     init() {
         imageService = ImageService()
         realmService = RealmService()
         fetchService = FetchService()
     }
+    
 }

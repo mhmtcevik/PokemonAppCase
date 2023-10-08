@@ -8,8 +8,15 @@
 import Foundation
 
 protocol FetchAPI{
-    func getData(path: String, parameters: [String: Any], completionHandler: @escaping (Result<Pokemon, NSError>) -> Void)
-    func getItemById(path: String, itemId: String, completionHandler: @escaping (Result<FavoriteItem, NSError>) -> Void)
+    func getData(
+        path: String,
+        parameters: [String: Any],
+        completionHandler: @escaping (Result<Pokemon, NSError>) -> Void)
+    
+    func getItemById(
+        path: String,
+        itemId: String,
+        completionHandler: @escaping (Result<FavoriteItem, NSError>) -> Void)
 }
 
 class FetchService: BaseAPI<Networking>, FetchAPI {

@@ -9,7 +9,7 @@ import Foundation
 import Alamofire
 
 enum Networking {
-    case getSearchItems(path: String, parameters: [String : Any])
+    case getSearchItems(path: String, parameters: Parameter)
     case getItemById(path: String, itemId: String)
 }
 

@@ -65,8 +65,6 @@ class RealmService: IRealmService {
                 }
             }
         }
-        
-        
     }
     
     func removeFavorite(id: String, completionhandler: () -> Void) {

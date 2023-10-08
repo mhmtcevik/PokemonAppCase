@@ -15,11 +15,7 @@ protocol FavoriteControllerOutput {
     func congifureCardsData(cards: [Favorite])
 }
 
-
 final class FavoriteViewController: ViewController {
-    
-    var favoriteItems: [Favorite] = []
-    
     //MARK: UI Components
     let favoriteCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -31,20 +27,29 @@ final class FavoriteViewController: ViewController {
         return collectionView
     }()
     
-    let favoriteToptView: UIView = {
+    let favoriteTopView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         return view
     }()
     
+    let topViewBorderView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .border
+        return view
+    }()
+    
     let topLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: UIFont.sfProTextMedium, size: 18)
+        label.font = UIFont(name: UIFont.sfProTextMedium, size: 28)
         label.textColor = .nameFont
         label.textAlignment = .center
         label.text = "Favorites"
         return label
     }()
+    
+    //MARK: Variables
+    var favoriteItems: [Favorite] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,17 +89,19 @@ final class FavoriteViewController: ViewController {
     
     func configureViews() {
         view.addSubview(favoriteCollectionView)
-        view.addSubview(favoriteToptView)
-        favoriteToptView.addSubview(topLabel)
+        
+        view.addSubview(favoriteTopView)
+        favoriteTopView.addSubview(topLabel)
+        favoriteTopView.addSubview(topViewBorderView)
     }
     
     func configureConstraints() {
          favoriteCollectionView.snp.makeConstraints { make in
              make.bottom.leading.trailing.equalToSuperview()
-             make.top.equalTo(favoriteToptView.snp.bottom).offset(15)
+             make.top.equalTo(favoriteTopView.snp.bottom).offset(15)
          }
          
-        favoriteToptView.snp.makeConstraints { make in
+        favoriteTopView.snp.makeConstraints { make in
             make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(40)
@@ -102,6 +109,12 @@ final class FavoriteViewController: ViewController {
         
         topLabel.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
+        }
+        
+        topViewBorderView.snp.makeConstraints { make in
+            make.top.equalTo(favoriteTopView.snp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(1)
         }
     }
     

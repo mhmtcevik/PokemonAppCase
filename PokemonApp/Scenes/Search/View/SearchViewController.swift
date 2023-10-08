@@ -14,6 +14,7 @@ protocol SearcViewControllerOutput {
     func congifureCardsData(cards: [Card])
     func reloadData()
     func favoriteAdded()
+    func checkSearchResultIsEmpty(isEmpty: Bool)
 }
 
 final class SearchViewController: ViewController {
@@ -42,6 +43,29 @@ final class SearchViewController: ViewController {
         return searchBar
     }()
     
+    let topViewBorderView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .border
+        return view
+    }()
+    
+    let emptyImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "doc.text.magnifyingglass"))
+        imageView.image?.withRenderingMode(.alwaysTemplate)
+        imageView.tintColor = .black.withAlphaComponent(0.5)
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    let emptyLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: UIFont.sfProTextMedium, size: 20)
+        label.textColor = .nameFont.withAlphaComponent(0.5)
+        label.textAlignment = .center
+        label.text = "Search result is empty"
+        return label
+    }()
+    
     //MARK: Variables
     var cards: [Card] = []
 
@@ -54,6 +78,9 @@ final class SearchViewController: ViewController {
         
         searchCollectionView.delegate = self
         searchCollectionView.dataSource = self
+        
+        guard let viewModel = self.viewModel as? SearchViewModel else { return }
+        viewModel.viewDidLoad()
         
     }
     
@@ -82,6 +109,7 @@ final class SearchViewController: ViewController {
         view.addSubview(searchCollectionView)
         view.addSubview(searchContentView)
         searchContentView.addSubview(searchBar)
+        searchContentView.addSubview(topViewBorderView)
     }
     
     func configureConstraints() {
@@ -97,8 +125,15 @@ final class SearchViewController: ViewController {
         }
         
         searchBar.snp.makeConstraints { make in
-            make.width.equalToSuperview()
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
             make.bottom.top.equalToSuperview()
+        }
+        
+        topViewBorderView.snp.makeConstraints { make in
+            make.top.equalTo(searchContentView.snp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(1)
         }
     }
 
@@ -128,6 +163,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         cell.configureViews()
         cell.configureConstraints()
         cell.configureData(for: card)
+        
         return cell
     }
     
@@ -142,14 +178,13 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
 }
 
-//MARK:
+//MARK: SearchBar methods
 extension SearchViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         guard let viewModel = viewModel as? SearchViewModel else { return }
         
         let parameters = viewModel.decideForParameter(searchString: searchText)
-        
         viewModel.fetchCardData(parameters: parameters)
     }
     
@@ -157,9 +192,7 @@ extension SearchViewController: UISearchBarDelegate {
 
 //MARK: - Protocol methods
 extension SearchViewController: SearcViewControllerOutput {
-    func favoriteAdded() {
-    
-    }
+    func favoriteAdded() { }
     
     func reloadData() {
         searchCollectionView.reloadData()
@@ -167,6 +200,31 @@ extension SearchViewController: SearcViewControllerOutput {
     
     func congifureCardsData(cards: [Card]) {
         self.cards = cards
+    }
+    
+    func checkSearchResultIsEmpty(isEmpty: Bool) {
+        if isEmpty {
+            guard emptyImageView.superview == nil && emptyLabel.superview == nil else { return }
+            
+            view.addSubview(emptyImageView)
+            view.addSubview(emptyLabel)
+            
+            emptyImageView.snp.makeConstraints { make in
+                make.centerX.centerY.equalToSuperview()
+                make.width.height.equalTo(100)
+            }
+            
+            emptyLabel.snp.makeConstraints { make in
+                make.centerX.equalTo(emptyImageView)
+                make.top.equalTo(emptyImageView.snp.bottom).offset(20)
+            }
+
+        } else {
+            guard emptyImageView.superview != nil && emptyLabel.superview != nil else { return }
+            
+            emptyImageView.removeFromSuperview()
+            emptyLabel.removeFromSuperview()
+        }
     }
     
 }

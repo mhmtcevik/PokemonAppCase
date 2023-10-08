@@ -29,9 +29,7 @@ class ViewController: UIViewController, Navigatable, ViewControllable {
         super.init(nibName: nil, bundle: nil)
     }
     
-    func bindViewModel() {
-        
-    }
+    func bindViewModel() { }
     
     func calculateCellSize(for collectionView: UICollectionView) -> CGSize {
         let cellSpacing: CGFloat = collectionView.bounds.width  * AppConstants.CollectionView.cellSpaceRate
@@ -47,6 +45,5 @@ class ViewController: UIViewController, Navigatable, ViewControllable {
         
         return cellSize
     }
-    
     
 }

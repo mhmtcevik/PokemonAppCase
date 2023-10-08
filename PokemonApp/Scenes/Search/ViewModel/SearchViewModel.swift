@@ -12,9 +12,10 @@ protocol SearcViewModelBehavior {
     var output: SearchViewController! { get set }
     
     func setViewControllerDelegate(for viewController: SearchViewController)
-    func fetchCardData(parameters: [String : Any])
-    func decideForParameter(searchString: String?) -> [String : Any]
+    func fetchCardData(parameters: Parameter)
+    func decideForParameter(searchString: String?) -> Parameter
     func addFavoritePokemon(item: Card)
+    func viewDidLoad()
 }
 
 class SearchViewModel: ViewModel, SearcViewModelBehavior {
@@ -29,11 +30,24 @@ class SearchViewModel: ViewModel, SearcViewModelBehavior {
         output = viewController
     }
     
-    func fetchCardData(parameters: [String : Any]) { //TODO: bu sozluk için bir typealias yaz.
+    func viewDidLoad() {
+        self.output.checkSearchResultIsEmpty(isEmpty: ContentManager.shared.cards.isEmpty)
+    }
+    
+    func fetchCardData(parameters: Parameter) {
         fetchService.getData(path: AppConstants.API.cardPath, parameters: parameters, completionHandler: { [weak self] response in
-            guard let pokemon = try? response.get() else { return }
+            guard let pokemon = try? response.get() else {
+                ContentManager.shared.cards = []
+                self?.output.congifureCardsData(cards: ContentManager.shared.cards)
+                self?.output.checkSearchResultIsEmpty(isEmpty: ContentManager.shared.cards.isEmpty)
+                self?.output.reloadData()
+                
+                return
+            }
+         
             ContentManager.shared.cards = pokemon.cards
             self?.output.congifureCardsData(cards: ContentManager.shared.cards)
+            self?.output.checkSearchResultIsEmpty(isEmpty: ContentManager.shared.cards.isEmpty)
             self?.output.reloadData()
         })
     }
@@ -48,7 +62,7 @@ class SearchViewModel: ViewModel, SearcViewModelBehavior {
         })
     }
     
-    func decideForParameter(searchString: String?) -> [String : Any] {
+    func decideForParameter(searchString: String?) -> Parameter {
         let key = "hp"
         var healtParameter = "gte"
         
@@ -73,8 +87,8 @@ class SearchViewModel: ViewModel, SearcViewModelBehavior {
     func addFavoritePokemon(item: Card) {
         
         realmService.addFavorite(item: item, completionHandler: { [weak self] error in
-            if let error = error {
-                //TODO: hata varsa birsey yap
+            if let _ = error {
+
             } else {
                 self?.output.favoriteAdded()
                 print(ContentManager.shared.favoriteCards)

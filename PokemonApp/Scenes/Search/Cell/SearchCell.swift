@@ -86,7 +86,7 @@ class SearchCell: UICollectionViewCell {
         nameLabel.text = card.name
     }
     
-    func showHeartAnimation() { //TODO: bunu nerede kullanacagını ayarla
+    func showHeartAnimation() {
         let heartImageView = UIImageView(image: UIImage(systemName: "heart.fill"))
         heartImageView.image?.withRenderingMode(.alwaysTemplate)
         heartImageView.tintColor = .red
@@ -101,7 +101,7 @@ class SearchCell: UICollectionViewCell {
             make.height.width.equalTo(100)
         }
 
-        UIView.animate(withDuration: 1.0, animations: {
+        UIView.animate(withDuration: 0.5, animations: {
             heartImageView.alpha = 0.0
             heartImageView.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
         }) { (finished) in

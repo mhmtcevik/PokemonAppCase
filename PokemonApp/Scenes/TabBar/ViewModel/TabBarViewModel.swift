@@ -25,7 +25,6 @@ class TabBarViewModel: TabBarViewModelBehavior {
         setTabBarItems()
     }
     
-    
     //MARK: Functions
     func setViewControllerDelegate(for viewController: TabBarController) {
         output = viewController

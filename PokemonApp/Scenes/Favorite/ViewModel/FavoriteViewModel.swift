@@ -40,7 +40,7 @@ class FavoriteViewModel: ViewModel, FavoriteViewModelBehavior {
         outPut.congifureCardsData(cards: data)
         outPut.reloadData()
     }
-    /*
+    /* TODO: detail view de kullanılacak
      func fetchItem(id: String, completionhandler: @escaping (_ card: FavoriteItem?) -> Void) {
          fetchService.getItemById(path: AppConstants.API.cardPath, itemId: id) { result in
              guard let card = try? result.get() else { return }

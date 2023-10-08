@@ -8,9 +8,11 @@
 import Foundation
 import Alamofire
 
+typealias Parameter = [String : Any]
+
 class BaseAPI<T: TargetType> {
     
-    private func buildParams(task: Task) -> ([String : Any], ParameterEncoding) {
+    private func buildParams(task: Task) -> (Parameter, ParameterEncoding) {
         switch task {
         case .requestPlain:
             return ([:], URLEncoding.default)
