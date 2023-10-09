@@ -8,17 +8,16 @@
 import Foundation
 import UIKit
 
-protocol FavoriteViewModelBehavior {
+protocol FavoriteViewModelInterface {
     var outPut: FavoriteViewController! { get set }
     
     func viewWillAppear()
     func setViewControllerDelegate(for viewController: FavoriteViewController)
     func setFavoriteData()
-    //func fetchItem(id: String, completionhandler: @escaping (_ card: FavoriteItem?) -> Void)
     func removeFavorite(id: String)
 }
 
-class FavoriteViewModel: ViewModel, FavoriteViewModelBehavior {
+class FavoriteViewModel: ViewModel, FavoriteViewModelInterface {
     
     var outPut: FavoriteViewController!
     
@@ -40,26 +39,6 @@ class FavoriteViewModel: ViewModel, FavoriteViewModelBehavior {
         outPut.congifureCardsData(cards: data)
         outPut.reloadData()
     }
-    /* TODO: detail view de kullanılacak
-     func fetchItem(id: String, completionhandler: @escaping (_ card: FavoriteItem?) -> Void) {
-         fetchService.getItemById(path: AppConstants.API.cardPath, itemId: id) { result in
-             guard let card = try? result.get() else { return }
-             completionhandler(card)
-         }
-     }
-
-    
-    func fetchImage(path: String?, cell: FavoriteCell) {
-        imageService.fetchImage(from: path, completionHandler: { result, image in
-            if result {
-                cell.imageView.image = image
-            } else {
-                cell.imageView.image = UIImage(named: "DefaultBackgroundImage")
-            }
-        })
-    }
-     */
-
     
     func removeFavorite(id: String) {
         realmService.removeFavorite(id: id) {

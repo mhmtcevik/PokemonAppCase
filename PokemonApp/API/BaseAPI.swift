@@ -21,7 +21,11 @@ class BaseAPI<T: TargetType> {
         }
     }
     
-    func fetchData<M: Decodable>(target: T, responseClass: M.Type, completionhandler: @escaping (Result<M, NSError>) -> Void) {
+    func fetchData<M: Decodable>(
+        target: T,
+        responseClass: M.Type,
+        completionhandler: @escaping (Result<M, NSError>) -> Void)
+    {
         let method = Alamofire.HTTPMethod(rawValue: target.method.rawValue)
         let headers = Alamofire.HTTPHeaders(target.headers ?? [:])
         let parameters = buildParams(task: target.task)

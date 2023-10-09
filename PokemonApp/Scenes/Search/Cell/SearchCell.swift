@@ -19,7 +19,6 @@ class SearchCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleToFill
         imageView.clipsToBounds = true
-        
         return imageView
     }()
     
@@ -29,7 +28,6 @@ class SearchCell: UICollectionViewCell {
         label.textColor = .nameFont
         label.textAlignment = .center
         label.numberOfLines = 2
-        
         return label
     }()
     
@@ -40,17 +38,27 @@ class SearchCell: UICollectionViewCell {
     }()
     
     //MARK: Variables
-    var buttonTappedHandler: (() -> Void)?
+    var buttonLongTappedHandler: (() -> Void)?
+    var buttonShortTappedHandler: (() -> Void)?
     
     //MARK: Functions    
     func configureActions() {
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction))
         button.addGestureRecognizer(longPressGesture)
+        
+        button.addTarget(self, action: #selector(shortPressAction), for: .touchUpInside)
     }
     
     @objc
-    func longPressAction() {
-        buttonTappedHandler?()
+    func longPressAction(_ gesture: UILongPressGestureRecognizer) {
+        if gesture.state == .began {
+            buttonLongTappedHandler?()
+        }
+    }
+    
+    @objc
+    func shortPressAction() {
+        buttonShortTappedHandler?()
     }
     
     func configureViews() {

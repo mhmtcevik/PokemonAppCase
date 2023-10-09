@@ -10,11 +10,13 @@ import SnapKit
 
 protocol SearcViewControllerOutput {
     var cards: [Card] { get }
+    var loadingStatus: LoadingStatus { get }
     
     func congifureCardsData(cards: [Card])
     func reloadData()
     func favoriteAdded()
     func checkSearchResultIsEmpty(isEmpty: Bool)
+    func loadingStatus(with status: LoadingStatus)
 }
 
 final class SearchViewController: ViewController {
@@ -66,8 +68,11 @@ final class SearchViewController: ViewController {
         return label
     }()
     
+    private lazy var indicatorView = UIActivityIndicatorView(style: .large)
+    
     //MARK: Variables
     var cards: [Card] = []
+    var loadingStatus: LoadingStatus = .completed
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -110,6 +115,8 @@ final class SearchViewController: ViewController {
         view.addSubview(searchContentView)
         searchContentView.addSubview(searchBar)
         searchContentView.addSubview(topViewBorderView)
+        
+        view.addSubview(indicatorView)
     }
     
     func configureConstraints() {
@@ -135,6 +142,10 @@ final class SearchViewController: ViewController {
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(1)
         }
+        
+        indicatorView.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+        }
     }
 
 }
@@ -154,11 +165,18 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         guard let viewModel = viewModel as? SearchViewModel else { return UICollectionViewCell() }
         viewModel.fetchImage(path: card.imageUrl, cell: cell)
         
-        cell.buttonTappedHandler = {
-            cell.button.isUserInteractionEnabled = false
+        cell.buttonLongTappedHandler = {
             cell.showHeartAnimation()
             viewModel.addFavoritePokemon(item: card)
         }
+        
+        cell.buttonShortTappedHandler = { [weak self] in
+            self?.navigator.show(
+                segue: .detail(viewModel: DetailViewModel(item: card)),
+                sender: self,
+                transition: .present)
+        }
+        
         cell.configureActions()
         cell.configureViews()
         cell.configureConstraints()
@@ -203,7 +221,7 @@ extension SearchViewController: SearcViewControllerOutput {
     }
     
     func checkSearchResultIsEmpty(isEmpty: Bool) {
-        if isEmpty {
+        if isEmpty && self.loadingStatus == .completed {
             guard emptyImageView.superview == nil && emptyLabel.superview == nil else { return }
             
             view.addSubview(emptyImageView)
@@ -218,13 +236,17 @@ extension SearchViewController: SearcViewControllerOutput {
                 make.centerX.equalTo(emptyImageView)
                 make.top.equalTo(emptyImageView.snp.bottom).offset(20)
             }
-
         } else {
             guard emptyImageView.superview != nil && emptyLabel.superview != nil else { return }
             
             emptyImageView.removeFromSuperview()
             emptyLabel.removeFromSuperview()
         }
+    }
+    
+    func loadingStatus(with status: LoadingStatus) {
+        status == .loading ? indicatorView.startAnimating() : indicatorView.stopAnimating()
+        self.loadingStatus = status
     }
     
 }

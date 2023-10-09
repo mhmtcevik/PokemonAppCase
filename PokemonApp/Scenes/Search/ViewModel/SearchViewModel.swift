@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-protocol SearcViewModelBehavior {
+protocol SearcViewModelInterface {
     var output: SearchViewController! { get set }
     
     func setViewControllerDelegate(for viewController: SearchViewController)
@@ -18,7 +18,7 @@ protocol SearcViewModelBehavior {
     func viewDidLoad()
 }
 
-class SearchViewModel: ViewModel, SearcViewModelBehavior {
+class SearchViewModel: ViewModel, SearcViewModelInterface {
     
     var output: SearchViewController!
     
@@ -35,18 +35,21 @@ class SearchViewModel: ViewModel, SearcViewModelBehavior {
     }
     
     func fetchCardData(parameters: Parameter) {
+        output.loadingStatus(with: .loading)
+        
         fetchService.getData(path: AppConstants.API.cardPath, parameters: parameters, completionHandler: { [weak self] response in
             guard let pokemon = try? response.get() else {
                 ContentManager.shared.cards = []
                 self?.output.congifureCardsData(cards: ContentManager.shared.cards)
+                self?.output.loadingStatus(with: .completed)
                 self?.output.checkSearchResultIsEmpty(isEmpty: ContentManager.shared.cards.isEmpty)
                 self?.output.reloadData()
-                
                 return
             }
          
             ContentManager.shared.cards = pokemon.cards
             self?.output.congifureCardsData(cards: ContentManager.shared.cards)
+            self?.output.loadingStatus(with: .completed)
             self?.output.checkSearchResultIsEmpty(isEmpty: ContentManager.shared.cards.isEmpty)
             self?.output.reloadData()
         })
@@ -85,7 +88,6 @@ class SearchViewModel: ViewModel, SearcViewModelBehavior {
     }
     
     func addFavoritePokemon(item: Card) {
-        
         realmService.addFavorite(item: item, completionHandler: { [weak self] error in
             if let _ = error {
 

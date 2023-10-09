@@ -15,8 +15,6 @@ struct FavoriteItem: Codable {
     let card: Card
 }
 
-import Foundation
-
 // MARK: - Welcome
 struct Card: Codable {
     let id: String?
