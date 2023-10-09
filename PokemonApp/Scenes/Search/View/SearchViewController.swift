@@ -172,7 +172,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         cell.buttonShortTappedHandler = { [weak self] in
             self?.navigator.show(
-                segue: .detail(viewModel: DetailViewModel(item: card)),
+                segue: .detail(viewModel: DetailViewModel(item: card, favorite: nil)),
                 sender: self,
                 transition: .present)
         }

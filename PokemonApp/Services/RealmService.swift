@@ -34,7 +34,8 @@ class RealmService: IRealmService {
         guard
             let id = item.id,
             let name = item.name,
-            let urlString = item.imageUrl
+            let urlString = item.imageUrl,
+            let hp = item.hp
         else { return }
         
         imageService.fetchImage(from: urlString) { result, image in
@@ -47,6 +48,7 @@ class RealmService: IRealmService {
             favorite.pokemonId = id
             favorite.name = name
             favorite.imageData = imageData
+            favorite.hp = hp
             
             let objects = self.realm.objects(Favorite.self)
             let existingControl = objects.where { $0.pokemonId == id }

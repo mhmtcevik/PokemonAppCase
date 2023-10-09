@@ -10,7 +10,8 @@ import UIKit
 
 protocol DetailViewModelInterface {
     var output: DetailViewController! { get }
-    var item: Card { get }
+    var item: Card? { get }
+    var favorite: Favorite? { get }
     
     func fetchItem(id: String, completionhandler: @escaping (_ card: FavoriteItem?) -> Void)
     func fetchImage(urlString: String?)
@@ -20,12 +21,14 @@ protocol DetailViewModelInterface {
 
 class DetailViewModel: ViewModel, DetailViewModelInterface {
     
-    var item: Card
+    var favorite: Favorite?
+    var item: Card?
     
     var output: DetailViewController!
     
-    init(item: Card) {
+    init(item: Card?, favorite: Favorite?) {
         self.item = item
+        self.favorite = favorite
         
         super.init()
     }
@@ -35,9 +38,8 @@ class DetailViewModel: ViewModel, DetailViewModelInterface {
     }
     
     func viewDidLoad() {
-        output.card = item
-        output.setInformation(item: item)
-        fetchImage(urlString: item.imageUrl)
+        output.setInformation(item: item, favorite: favorite)
+        fetchImage(urlString: item?.imageUrl)
     }
     
      func fetchItem(id: String, completionhandler: @escaping (_ card: FavoriteItem?) -> Void) {
@@ -48,12 +50,16 @@ class DetailViewModel: ViewModel, DetailViewModelInterface {
      }
     
     func fetchImage(urlString: String?) {
-        output.loadingStatus(with: .loading)
-        
-        imageService.fetchImage(from: urlString, completionHandler: { [weak self] result, image in
-            self?.output.setImage(image: image)
-            self?.output.loadingStatus(with: .completed)
-        })
+        if favorite == nil {
+            output.loadingStatus(with: .loading)
+            
+            imageService.fetchImage(from: urlString, completionHandler: { [weak self] result, image in
+                self?.output.setImage(image: image)
+                self?.output.loadingStatus(with: .completed)
+            })
+        } else {
+            self.output.setImage(image: UIImage(data: favorite?.imageData ?? Data()))
+        }
     }
     
 }

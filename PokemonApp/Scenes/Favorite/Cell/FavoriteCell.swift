@@ -40,17 +40,29 @@ class FavoriteCell: UICollectionViewCell {
     }()
     
     //MARK: Variables
-    var buttonTappedHandler: (() -> Void)?
+    var buttonLongTappedHandler: (() -> Void)?
+    var buttonShortTappedHandler: (() -> Void)?
     
     //MARK: Functions
     func configureActions() {
-        button.addTarget(self, action: #selector(longPressAction), for: .touchUpInside)
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction))
+        button.addGestureRecognizer(longPressGesture)
+        
+        button.addTarget(self, action: #selector(shortPressAction), for: .touchUpInside)
     }
     
     @objc
-    func longPressAction() {
-        buttonTappedHandler?()
+    func longPressAction(_ gesture: UILongPressGestureRecognizer) {
+        if gesture.state == .began {
+            buttonLongTappedHandler?()
+        }
     }
+    
+    @objc
+    func shortPressAction() { 
+        buttonShortTappedHandler?()
+    }
+       
     
     func configureViews() {
         self.layer.cornerRadius = 15

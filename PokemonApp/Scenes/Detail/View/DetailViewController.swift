@@ -13,10 +13,8 @@ enum LoadingStatus {
 }
 
 protocol DetailViewControllerOutput {
-    var card: Card! { get }
-    
     func setImage(image: UIImage?)
-    func setInformation(item: Card?)
+    func setInformation(item: Card?, favorite: Favorite?)
     func loadingStatus(with status: LoadingStatus)
 }
 
@@ -75,7 +73,6 @@ class DetailViewController: ViewController, DetailViewControllerOutput {
     private lazy var indicatorView = UIActivityIndicatorView(style: .large)
     
     //MARK: -Variables
-    var card: Card!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -160,9 +157,9 @@ class DetailViewController: ViewController, DetailViewControllerOutput {
         profileImageView.image = image
     }
     
-    func setInformation(item: Card?) {
-        namelabel.text = item?.name
-        hpLabel.text = "\(String(describing: item?.hp ?? "")) HP"
+    func setInformation(item: Card?, favorite: Favorite?) {
+        namelabel.text = item == nil ? favorite?.name : item?.name
+        hpLabel.text = item == nil ? "\(String(describing: favorite?.hp ?? "")) HP" : "\(String(describing: item?.hp ?? "")) HP"
     }
     
     func loadingStatus(with status: LoadingStatus) {

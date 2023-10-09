@@ -9,4 +9,4 @@
     + If search result empty, show a label to Empty item
     + If finish the search, clean the board
     + To add borderview to topviews
-    - Check favorite process
+    + Check favorite process

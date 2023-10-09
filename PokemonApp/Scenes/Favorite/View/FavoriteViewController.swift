@@ -149,8 +149,15 @@ extension FavoriteViewController: UICollectionViewDelegate, UICollectionViewData
             cell.configureActions()
             cell.configureData(for: favoriteCard)
             
-            cell.buttonTappedHandler = {
+            cell.buttonLongTappedHandler = {
                 viewModel.removeFavorite(id: favoriteCard.pokemonId)
+            }
+            
+            cell.buttonShortTappedHandler = { [weak self] in
+                self?.navigator.show(
+                    segue: .detail(viewModel: DetailViewModel(item: nil, favorite: favoriteCard)),
+                    sender: self,
+                    transition: .present)
             }
 
             cell.configureViews()
