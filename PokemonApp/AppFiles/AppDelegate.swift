@@ -14,8 +14,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         print("App is being started..")
         print("App is being started 2..")
-        print("App is being started 3..")
-        
         return true
     }
 
